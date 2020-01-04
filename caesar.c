@@ -23,7 +23,7 @@ int main(int argc, string argv[])
             {
                 // set bool = false and stop the loop if any digit is non-numeric
                 validity = false;
-                i = n;
+                break;
             }
         }
         // if bool = false, print error message and quit
@@ -40,30 +40,40 @@ int main(int argc, string argv[])
             int len = strlen(plaintext);
             for (int j = 0; j < len; j++)
             {
+                // change alphabetical chars
                 if (isalpha(plaintext[j]))
                 {
                     int ascii1 = (int) plaintext[j];
                     int ascii2;
-                    if (ascii1 + k > 122)
+                    if (islower(plaintext[j]))
                     {
-                        ascii2 = 97 + k - 122 + ascii1 - 1;
+                        // refer to ascii table
+                        if (ascii1 + k > 122)
+                        {
+                            ascii2 = 97 + k - 122 + ascii1 - 1;
+                        }
+                        else
+                        {
+                            ascii2 = ascii1 + k;
+                        }
                     }
-                    else
+                    if (isupper(plaintext[j]))
                     {
-                        ascii2 = ascii1 + k;
+                        // refer to ascii table
+                        if (ascii1 + k > 90)
+                        {
+                            ascii2 = 65 + k - 90 + ascii1 - 1;
+                        }
+                        else
+                        {
+                            ascii2 = ascii1 + k;
+                        }
                     }
                     char ciphertext = (char) ascii2;
                     printf("%c", ciphertext);
                 }
-                if (isspace(plaintext[j]))
-                {
-                    printf(" ");
-                }
-                if (isdigit(plaintext[j]))
-                {
-                    printf("%i", plaintext[j]);
-                }
-                if (ispunct(plaintext[j]))
+                // do not change non-alphabetical chars
+                else
                 {
                     printf("%c", plaintext[j]);
                 }
