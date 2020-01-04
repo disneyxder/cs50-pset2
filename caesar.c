@@ -1,90 +1,114 @@
 #include <cs50.h>
-#include <string.h>
 #include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
 
-int key(void);
-int main(int argc, string argv[])
+void invalid(void);
+
+int main(void)
 {
-    // check if user entered a key when executing the program
-    if (argc != 2)
+    long input, cc1, cc2, cc3;
+    input = get_long("Number: ");
+    cc1 = input;
+    cc2 = input;
+    cc3 = input;
+
+    int count = 0;
+    while (cc1 > 0)
     {
-        key();
+        count++;
+        cc1 /= 10;
+    }
+
+    if (count != 13 && count != 15 && count != 16)
+    {
+        invalid();
     }
     else
     {
-        // initialize bool = true
-        bool validity = true;
-        for (int i = 0, n = strlen(argv[1]); i < n; i++)
+        int countsecond = count / 2, countnonsecond = count - count / 2, sum1, sum2;
+        int seconddigit[countsecond], nonseconddigit[countnonsecond], doubleseconddigit[countsecond], multipliedsum[countsecond],
+            nonmultipliedsum[countnonsecond];
+        for (int i = 0; i < countsecond; i++)
         {
-            // check if digits entered by user are numeric
-            if (!isdigit(argv[1][i]))
+            seconddigit[i] = (cc2 % 100) / 10;
+            cc2 /= 100;
+            doubleseconddigit[i] = seconddigit[i] * 2;
+            if (i != 0)
             {
-                // set bool = false and stop the loop if any digit is non-numeric
-                validity = false;
-                break;
+                multipliedsum[0] = doubleseconddigit[0] / 10 + doubleseconddigit[0] % 10;
+                multipliedsum[i] = multipliedsum[i - 1] + doubleseconddigit[i] / 10 + doubleseconddigit[i] % 10;
+                sum1 = multipliedsum[i];
             }
         }
-        // if bool = false, print error message and quit
-        if (!validity)
+        for (int j = 0; j < countnonsecond; j++)
         {
-            key();
+            nonseconddigit[j] = (cc3 % 10);
+            cc3 /= 100;
+            if (j != 0)
+            {
+                nonmultipliedsum[0] = nonseconddigit[0];
+                nonmultipliedsum[j] = nonseconddigit[j] + nonmultipliedsum[j - 1];
+                sum2 = nonmultipliedsum[j];
+            }
+        }
+        if ((sum1 + sum2) % 10 != 0)
+        {
+            invalid();
         }
         else
         {
-            // change key string to int
-            int k = atoi(argv[1]);
-            string plaintext = get_string("plaintext: ");
-            printf("ciphertext: ");
-            int len = strlen(plaintext);
-            for (int j = 0; j < len; j++)
+            if (count == 13)
             {
-                // change alphabetical chars
-                if (isalpha(plaintext[j]))
+                if (nonseconddigit[6] == 4)
                 {
-                    int ascii1 = (int) plaintext[j];
-                    int ascii2;
-                    if (islower(plaintext[j]))
-                    {
-                        // refer to ascii table
-                        if (ascii1 + k > 122)
-                        {
-                            ascii2 = 97 + k - 122 + ascii1 - 1;
-                        }
-                        else
-                        {
-                            ascii2 = ascii1 + k;
-                        }
-                    }
-                    if (isupper(plaintext[j]))
-                    {
-                        // refer to ascii table
-                        if (ascii1 + k > 90)
-                        {
-                            ascii2 = 65 + k - 90 + ascii1 - 1;
-                        }
-                        else
-                        {
-                            ascii2 = ascii1 + k;
-                        }
-                    }
-                    char ciphertext = (char) ascii2;
-                    printf("%c", ciphertext);
+                    printf("VISA\n");
                 }
-                // do not change non-alphabetical chars
                 else
                 {
-                    printf("%c", plaintext[j]);
+                    invalid();
                 }
             }
-            printf("\n");
+            if (count == 15)
+            {
+                if (nonseconddigit[7] == 3)
+                {
+                    if (seconddigit[6] == 4 || seconddigit[6] == 7)
+                    {
+                        printf("AMEX\n");
+                    }
+                    else
+                    {
+                        invalid();
+                    }
+                }
+            }
+            if (count == 16)
+            {
+                if (seconddigit[7] == 4)
+                {
+                    printf("VISA\n");
+                }
+                else if (seconddigit[7] == 5)
+                {
+                    if (nonseconddigit[7] == 1 || nonseconddigit[7] == 2 || nonseconddigit[7] == 3 || nonseconddigit[7] == 4 ||
+                        nonseconddigit[7] == 5)
+                    {
+                        printf("MASTERCARD\n");
+                    }
+                    else
+                    {
+                        invalid();
+                    }
+                }
+                else
+                {
+                    invalid();
+                }
+            }
         }
     }
 }
 
-int key(void)
+void invalid(void)
 {
-    printf("Usage: ./caesar key\n");
-    return 1;
+    printf("INVALID\n");
 }
