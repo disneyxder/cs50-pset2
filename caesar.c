@@ -50,7 +50,23 @@ int main(int argc, string argv[])
                         // refer to ascii table
                         if (ascii1 + k > 122)
                         {
-                            ascii2 = 97 + k - 122 + ascii1 - 1;
+                            if (k < 26)
+                            {
+                                ascii2 = 97 + k - 122 + ascii1 - 1;
+                            }
+                            // if k > 26, only k % 26 is relevant since shifting 26 times gets back the same result
+                            if (k > 26)
+                            {
+                                int l = k % 26;
+                                if (ascii1 + l > 122)
+                                {
+                                    ascii2 = 97 + l - 122 + ascii1 - 1;
+                                }
+                                else
+                                {
+                                    ascii2 = ascii1 + l;
+                                }
+                            }
                         }
                         else
                         {
@@ -62,7 +78,22 @@ int main(int argc, string argv[])
                         // refer to ascii table
                         if (ascii1 + k > 90)
                         {
-                            ascii2 = 65 + k - 90 + ascii1 - 1;
+                            if (k < 26)
+                            {
+                                ascii2 = 65 + k - 90 + ascii1 - 1;
+                            }
+                            if (k > 26)
+                            {
+                                int m = k % 26;
+                                if (ascii1 + m > 90)
+                                {
+                                    ascii2 = 65 + m - 90 + ascii1 - 1;
+                                }
+                                else
+                                {
+                                    ascii2 = ascii1 + m;
+                                }
+                            }
                         }
                         else
                         {
@@ -86,5 +117,5 @@ int main(int argc, string argv[])
 int key(void)
 {
     printf("Usage: ./caesar key\n");
-    return 1;
+    exit(1);
 }
