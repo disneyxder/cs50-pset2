@@ -1,121 +1,58 @@
 #include <cs50.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 
-int key(void);
 int main(int argc, string argv[])
 {
-    // check if user entered a key when executing the program
+    // check for key
     if (argc != 2)
     {
-        key();
+        printf("please input a key!\n");
+        return 1; 
     }
-    else
+    
+    // validate key 
+    for (int i = 0; i < strlen(argv[1]); i++)
     {
-        // initialize bool = true
-        bool validity = true;
-        for (int i = 0, n = strlen(argv[1]); i < n; i++)
+        if (!isdigit(argv[1][i]))
         {
-            // check if digits entered by user are numeric
-            if (!isdigit(argv[1][i]))
-            {
-                // set bool = false and stop the loop if any digit is non-numeric
-                validity = false;
-                break;
-            }
+            printf("./caesar key\n");
+            return 1; 
         }
-        // if bool = false, print error message and quit
-        if (!validity)
+    }
+    
+    int key = atoi(argv[1]);
+    
+    // prompt user for plaintext
+    string p; 
+    p = get_string("plaintext: ");
+    
+    // print ciphertext
+    printf("ciphertext: "); 
+    for (int j = 0; j < strlen(p); j++)
+    {
+        if (isalpha(p[j]))
         {
-            key();
+            if (isupper(p[j]))
+            {
+                p[j] -= 65;
+                p[j] = (p[j] + key) % 26; 
+                printf("%c", p[j] + 65);
+            }
+            if (islower(p[j]))
+            {
+                p[j] -= 97; 
+                p[j] = (p[j] + key) % 26; 
+                printf("%c", p[j] + 97);
+            }
         }
         else
         {
-            // change key string to int
-            int k = atoi(argv[1]);
-            string plaintext = get_string("plaintext: ");
-            printf("ciphertext: ");
-            int len = strlen(plaintext);
-            for (int j = 0; j < len; j++)
-            {
-                // change alphabetical chars
-                if (isalpha(plaintext[j]))
-                {
-                    int ascii1 = (int) plaintext[j];
-                    int ascii2;
-                    if (islower(plaintext[j]))
-                    {
-                        // refer to ascii table
-                        if (ascii1 + k > 122)
-                        {
-                            if (k < 26)
-                            {
-                                ascii2 = 97 + k - 122 + ascii1 - 1;
-                            }
-                            // if k > 26, only k % 26 is relevant since shifting 26 times gets back the same result
-                            if (k > 26)
-                            {
-                                int l = k % 26;
-                                if (ascii1 + l > 122)
-                                {
-                                    ascii2 = 97 + l - 122 + ascii1 - 1;
-                                }
-                                else
-                                {
-                                    ascii2 = ascii1 + l;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            ascii2 = ascii1 + k;
-                        }
-                    }
-                    if (isupper(plaintext[j]))
-                    {
-                        // refer to ascii table
-                        if (ascii1 + k > 90)
-                        {
-                            if (k < 26)
-                            {
-                                ascii2 = 65 + k - 90 + ascii1 - 1;
-                            }
-                            if (k > 26)
-                            {
-                                int m = k % 26;
-                                if (ascii1 + m > 90)
-                                {
-                                    ascii2 = 65 + m - 90 + ascii1 - 1;
-                                }
-                                else
-                                {
-                                    ascii2 = ascii1 + m;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            ascii2 = ascii1 + k;
-                        }
-                    }
-                    char ciphertext = (char) ascii2;
-                    printf("%c", ciphertext);
-                }
-                // do not change non-alphabetical chars
-                else
-                {
-                    printf("%c", plaintext[j]);
-                }
-            }
-            printf("\n");
+            printf("%c", p[j]); 
         }
     }
-}
-
-int key(void)
-{
-    printf("Usage: ./caesar key\n");
-    exit(1);
+    printf("\n"); 
+    return 0; 
 }
