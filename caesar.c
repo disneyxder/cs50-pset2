@@ -30,8 +30,9 @@ int main(int argc, string argv[])
     p = get_string("plaintext: ");
     
     // print ciphertext
+    int len = strlen(p);
     printf("ciphertext: "); 
-    for (int j = 0; j < strlen(p); j++)
+    for (int j = 0; j < len; j++)
     {
         if (isalpha(p[j]))
         {
